@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$id": "user.schema.json",
+    "title": "User",
+    "description": "A discord user with data for team roles",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "name (and tag) of the user",
+            "type": "string"
+        },
+        "team": {
+            "description": "id of the team the user belongs to (if any)",
+            "type": "string"
+        }
+    },
+    "required": [
+        "name"
+    ]
+}

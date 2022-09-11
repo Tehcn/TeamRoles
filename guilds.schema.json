@@ -1,0 +1,95 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$id": "guilds.schema.json",
+    "title": "Guilds",
+    "description": "A discord guild with data for team roles",
+    "type": "object",
+    "properties": {
+        "GUILD_IDs": {
+            "description": "A list of guild ids",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "GUILDS": {
+            "description": "Data for every guild the bot is in",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "discord guild id",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "name of discord guild",
+                        "type": "string"
+                    },
+                    "team_roles": {
+                        "description": "list of team roles",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "color": {
+                                    "description": "color of the role",
+                                    "type": "string"
+                                },
+                                "team_name": {
+                                    "description": "name of role / team (unique)",
+                                    "type": "string"
+                                },
+                                "team_id": {
+                                    "description": "id of team (unique)",
+                                    "type": "string"
+                                },
+                                "members": {
+                                    "description": "object for containing a list for admin members and normal members",
+                                    "type": "object",
+                                    "properties": {
+                                        "admins": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "./user.schema.json"
+                                            }
+                                        },
+                                        "normal": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "./user.schema.json"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "admins",
+                                        "normal"
+                                    ]
+                                },
+                                "leader": {
+                                    "description": "leader of the team",
+                                    "$ref": "./user.schema.json"
+                                }
+                            },
+                            "required": [
+                                "color",
+                                "team_name",
+                                "team_id",
+                                "members"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "team_roles"
+                ]
+            }
+        }
+    },
+    "required": [
+        "GUILD_IDs",
+        "GUILDS"
+    ]
+}

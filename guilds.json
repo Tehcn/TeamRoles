@@ -1,0 +1,13 @@
+{
+    "$schema": "./guilds.schema.json",
+    "GUILD_IDs": [
+        "526851597595312168"
+    ],
+    "GUILDS": [
+        {
+            "id": "526851597595312168",
+            "name": "T.E.S.T",
+            "team_roles": []
+        }
+    ]
+}
