@@ -2,7 +2,7 @@ const crypto = require('./crypto');
 const config = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, InteractionType } = require('discord.js');
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.commands = new Collection();
@@ -37,6 +37,18 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
 
+});
+
+client.on('interactionCreate', async interaction => {
+    if (interaction.type !== InteractionType.ApplicationCommandAutocomplete) return;
+    console.log(`user ${interaction.user.tag} from guild ${interaction.guild.name} is attempting to autocomplete the command ${interaction.commandName} on option ${interaction.options.getFocused(true).name} with data ${interaction.options.getFocused()}`);
+    const command = interaction.client.commands.get(interaction.commandName);
+    try {
+        await command.autocomplete(interaction);
+    } catch (error) {
+        console.error(error);
+        await interaction.respond([{ name: 'An Error Occurred... ', value: 'seriously' }]);
+    }
 });
 
 client.login(BOT_TOKEN);

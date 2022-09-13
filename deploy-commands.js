@@ -1,7 +1,7 @@
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord.js');
 const { BOT_TOKEN_ENCRYPTED, CLIENT_ID } = require('./config.json');
-const { GUILDS } = require('./guilds.json');
+const { guilds } = require('./guilds.json');
 const fs = require('node:fs');
 const crypto = require('./crypto');
 
@@ -22,7 +22,7 @@ const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
     try {
         console.log(`Started refreshing ${commands.length} application (/) commands`);
 
-        GUILDS.forEach(async guild => {
+        guilds.forEach(async guild => {
             const data = await rest.put(
                 Routes.applicationGuildCommands(CLIENT_ID, guild.id),
                 { body: commands }
@@ -31,7 +31,7 @@ const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
             console.log(`Successfully reloaded ${commands.length} application (/) commands for guild ${guild.name}.`);
         });
 
-        console.log(`Successfully reloaded application (/) commands for ${GUILDS.length} guilds.`);
+        console.log(`Successfully reloaded application (/) commands for ${guilds.length} guilds.`);
     } catch (error) {
         console.error(error);
     }

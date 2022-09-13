@@ -22,7 +22,12 @@ const decrypt = (hash, key) => {
     return decrpyted.toString();
 };
 
+const sha256 = (text) => {
+    return crypto.createHash('sha256').update(text).digest('hex');
+};
+
 module.exports = {
     encrypt,
-    decrypt
+    decrypt,
+    sha256
 }
