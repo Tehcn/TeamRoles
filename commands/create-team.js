@@ -2,7 +2,7 @@ const { SlashCommandBuilder, Interaction } = require('discord.js');
 const fs = require('node:fs');
 const { sha256 } = require('../crypto');
 const { hexToRGBArray } = require('../utils');
-const { guilds } = require('../guilds.json');
+const { guilds, $schema, guild_ids } = require('../guilds.json');
 
 const DEFAULT_COLORS = {
     RED: '#ff0000',
@@ -38,15 +38,14 @@ module.exports = {
      */
     async execute(interaction) {
         let guild = interaction.guild;
-        let member = interaction.member;
         let user = interaction.user;
         let team_id = sha256(interaction.options.getString('name'));
 
         let guild_team_data = guilds.filter(guildt => guildt.id === guild.id)[0];
-        let doesTeamWithSameNameAlreadyExist = guild_team_data.team_roles.filter(team => team.team_id === team_id).length !== 0;
+        let teamWithSameNameAlreadyExists = guild_team_data.team_roles.filter(team => team.team_id === team_id).length !== 0;
 
-        if (doesTeamWithSameNameAlreadyExist) {
-
+        if (teamWithSameNameAlreadyExists) {
+            interaction.reply('Name already taken!');
             return;
         }
 
@@ -86,9 +85,23 @@ module.exports = {
 
         guild.members.addRole(roleData);
 
+        guild_team_data.team_roles.push(team);
+
+        let gidx = guilds.findIndex(guildt => guildt.id === guild_team_data.id)
+
+        guilds[gidx] = guild_team_data;
+
         console.log(`User ${user.tag} created a team ${team.team_id}`);
 
-        await interaction.reply(`\`\`\`json\n${JSON.stringify(team, null, 4)}\`\`\`` + `\`\`\`json\n${JSON.stringify(member, null, 4)}\`\`\``);
+        const finalJSON = {
+            "$schema": $schema,
+            "guild_ids": guild_ids,
+            "guilds": guilds
+        };
+
+        fs.writeFileSync('./guilds.json', JSON.stringify(finalJSON, null, 4));
+
+        await interaction.reply(`Created team ${team.team_name}!`);
     },
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused();
